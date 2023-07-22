@@ -1,6 +1,8 @@
 import Webcam from "react-webcam";
 import { useCallback, useRef, useState } from "react";
 import { API } from "../constants";
+import styled from "styled-components";
+import { useLongPress } from 'react-use-gesture';
 
 const FACING_MODE_USER = "user";
 const FACING_MODE_ENVIRONMENT = "environment";
@@ -8,6 +10,11 @@ const FACING_MODE_ENVIRONMENT = "environment";
 const videoConstraints = {
     facingMode: FACING_MODE_USER
 };
+
+const StyledWebcam = styled(Webcam)`
+    width: 100%;
+    height: 90vh;
+`;
 
 const CustomWebcam = () => {
   const webcamRef = useRef(null);
@@ -62,7 +69,7 @@ const CustomWebcam = () => {
     });
   
   }, [webcamRef, setAudio, setResult, setImgSrc]);
-    
+
   const handleChangeCamera = useCallback(() => {
     setFacingMode(
       prevState =>
@@ -72,12 +79,14 @@ const CustomWebcam = () => {
     );
   }, []);
 
+  const longPressBind = useLongPress(capture, {threshold: 500});
+
   return (
     <div className="container">
       {imgSrc ? (
         <img src={imgSrc} alt="webcam" />
       ) : (
-        <Webcam
+        <StyledWebcam
           audio={false}
           ref={webcamRef}
           screenshotFormat="image/jpeg"
@@ -85,6 +94,7 @@ const CustomWebcam = () => {
             ...videoConstraints,
             facingMode
           }}
+          {...longPressBind}
         />
       )}
       <div className="btn-container" style={{display: 'flex', gap: '20px'}}>

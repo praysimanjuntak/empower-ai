@@ -28,7 +28,7 @@ async def predict(file: UploadFile = File(...), model_name: Optional[str] = "GIT
             raise HTTPException(status_code=400, detail="Could not save image file")
 
         os.environ['AZFUSE_TSV_USE_FUSE'] = '1'  # Set the environment variable
-        result = test_git_inference_single_image(image_path, model_name, "")
+        result = test_git_inference_single_image(image_path, model_name, "What's in front of me?")
 
         # Generate speech from the result text
         tts = TTS(model_name=TTS_MODEL_NAME, progress_bar=True, gpu=True)

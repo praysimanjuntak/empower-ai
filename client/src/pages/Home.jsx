@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import MyDropzone from "../components/MyDropzone";
 import CustomWebcam from "../components/CustomWebcam";
 
 const Container = styled.div`
