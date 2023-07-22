@@ -28,16 +28,23 @@ const CustomWebcam = () => {
 
       // Post to the API
       fetch(API + '/predict', {
-          method: 'POST',
-          body: formData,
-      })
-      .then((response) => response.json())
-      .then((data) => {
-          setResult(data.result);
-          setAudio(API + data.audioFile);
-      })
-      .catch((error) => {
-          console.error('Error:', error);
+            method: 'POST',
+            body: formData,
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            setResult(data.result);
+        
+            // Fetch audio file from separate endpoint
+            fetch(API + data.audioFile)
+            .then((response) => response.blob())
+            .then((blob) => {
+                const audioUrl = URL.createObjectURL(blob);
+                setAudio(audioUrl);
+            });
+        })
+        .catch((error) => {
+            console.error('Error:', error);
       });
     });
 
