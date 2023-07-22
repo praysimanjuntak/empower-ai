@@ -2,17 +2,17 @@ import Webcam from "react-webcam";
 import { useCallback, useRef, useState } from "react";
 import { API } from "../constants";
 import styled from "styled-components";
+import { useWindowSize } from "@uidotdev/usehooks";
 
-const FACING_MODE_USER = "user";
 const FACING_MODE_ENVIRONMENT = "environment";
 
 const videoConstraints = {
-    facingMode: FACING_MODE_USER
+    facingMode: FACING_MODE_ENVIRONMENT
 };
 
 const StyledWebcam = styled(Webcam)`
     width: 100%;
-    height: 90%;
+    height: 100%;
 `;
 
 const CustomWebcam = () => {
@@ -20,7 +20,11 @@ const CustomWebcam = () => {
   const [imgSrc, setImgSrc] = useState(null);
   const [result, setResult] = useState('');
   const [audio, setAudio] = useState(null);
-  const [facingMode, setFacingMode] = useState(FACING_MODE_USER);
+  const [facingMode, setFacingMode] = useState(FACING_MODE_ENVIRONMENT);
+  const size = useWindowSize();
+
+  const isLandscape = size.height <= size.width;
+  const ratio = isLandscape ? size.width / size.height : size.height / size.width;
   
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
@@ -68,15 +72,6 @@ const CustomWebcam = () => {
     });
   
   }, [webcamRef, setAudio, setResult, setImgSrc]);
-    
-  const handleChangeCamera = useCallback(() => {
-    setFacingMode(
-      prevState =>
-        prevState === FACING_MODE_USER
-          ? FACING_MODE_ENVIRONMENT
-          : FACING_MODE_USER
-    );
-  }, []);
 
   return (
     <div className="container">
@@ -84,19 +79,21 @@ const CustomWebcam = () => {
         <img src={imgSrc} alt="webcam" />
       ) : (
         <StyledWebcam
-          audio={false}
-          ref={webcamRef}
-          screenshotFormat="image/jpeg"
-          videoConstraints={{
-            ...videoConstraints,
-            facingMode
-          }}
-          onClick={capture}
+            audio={false}
+            ref={webcamRef}
+            screenshotFormat="image/jpeg"
+            videoConstraints={{
+                ...videoConstraints,
+                facingMode,
+                aspectRatio: ratio
+            }}
+            onClick={capture}
+            height={size.height} 
+            width={size.width}
         />
       )}
       <div className="btn-container" style={{display: 'flex', gap: '20px'}}>
         <button onClick={capture}>Capture photo</button>
-        <button onClick={handleChangeCamera}>Switch Camera</button>
       </div>
       {result && <div>Result: {result}</div>}
       {audio && <audio controls src={audio}></audio>}
