@@ -34,15 +34,11 @@ async def predict(file: UploadFile = File(...), model_name: Optional[str] = "GIT
         tts = TTS(model_name=TTS_MODEL_NAME, progress_bar=True, gpu=True)
         tts.tts_to_file(text=result, speaker=tts.speakers[0], language=tts.languages[0], file_path="output.wav")
 
-        return {"result": result, "audioFile": "/audio"}
+        return FileResponse("output.wav", media_type="audio/wav")
 
     except Exception as e:
         logging.error(f"An error occurred: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
-
-@app.get("/audio")
-async def audio():
-    return FileResponse("output.wav")
 
 def save_image(file: UploadFile):
     try:

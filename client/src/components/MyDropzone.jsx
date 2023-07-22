@@ -25,13 +25,23 @@ function MyDropzone() {
 
         // Post to the API
         fetch(API + '/predict', {
+            headers: {
+                "ngrok-skip-browser-warning": true
+            },
             method: 'POST',
             body: formData,
         })
         .then((response) => response.json())
         .then((data) => {
             setResult(data.result);
-            setAudio(API + data.audioFile);
+
+            // Fetch audio file from separate endpoint
+            fetch(API + data.audioFile)
+            .then((response) => response.blob())
+            .then((blob) => {
+                const audioUrl = URL.createObjectURL(blob);
+                setAudio(audioUrl);
+            });
         })
         .catch((error) => {
             console.error('Error:', error);
