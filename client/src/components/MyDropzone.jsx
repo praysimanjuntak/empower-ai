@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { API } from '../constants';
 
 function MyDropzone() {
   const [result, setResult] = useState('');
@@ -23,14 +24,14 @@ function MyDropzone() {
         setResult('');
 
         // Post to the API
-        fetch('http://localhost:8000/predict', {
+        fetch(API + '/predict', {
             method: 'POST',
             body: formData,
         })
         .then((response) => response.json())
         .then((data) => {
             setResult(data.result);
-            setAudio("http://localhost:8000" + data.audioFile);
+            setAudio(API + data.audioFile);
         })
         .catch((error) => {
             console.error('Error:', error);
