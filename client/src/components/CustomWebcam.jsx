@@ -12,7 +12,7 @@ const videoConstraints = {
 
 const StyledWebcam = styled(Webcam)`
     width: 100%;
-    height: 90vh;
+    height: 90%;
 `;
 
 const CustomWebcam = () => {
