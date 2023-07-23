@@ -82,7 +82,7 @@ const Home = () => {
                             <OptionText>I want to help someone with visual impairment.</OptionText>
                         </Option>
                     </Link>
-                    <Link style={{textDecoration: 'none', color: 'inherit'}}>
+                    <Link to="hearing" style={{textDecoration: 'none', color: 'inherit'}}>
                         <Option>
                             <OptionLogo src={EarLogo} alt="eye" />
                             <OptionText>I am a deaf/person with hard of hearing.</OptionText>

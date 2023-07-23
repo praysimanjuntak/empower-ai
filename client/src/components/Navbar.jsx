@@ -90,8 +90,8 @@ function Navbar() {
         <Menu>
           <Link style={{textDecoration: 'none', color: 'inherit'}} to="/path2"><MenuItem>Vision</MenuItem></Link>
           <Link style={{textDecoration: 'none', color: 'inherit'}} to="/path3"><MenuItem>Hearing</MenuItem></Link>
-          <Link style={{textDecoration: 'none', color: 'inherit'}} to="/path1"><MenuItem>Item 1</MenuItem></Link>
-          <Link style={{textDecoration: 'none', color: 'inherit'}} to="/path4"><MenuItem>Item 4</MenuItem></Link>
+          <Link style={{textDecoration: 'none', color: 'inherit'}} to="/path1"><MenuItem>Mental</MenuItem></Link>
+          <Link style={{textDecoration: 'none', color: 'inherit'}} to="/path4"><MenuItem>About Us</MenuItem></Link>
         </Menu>
       </Nav>
       

@@ -33,11 +33,11 @@ async def predict(file: UploadFile = File(...), model_name: Optional[str] = "GIT
         
         os.environ['AZFUSE_TSV_USE_FUSE'] = '1'  # Set the environment variable
         result = test_git_inference_single_image(image_path, model_name, "What's in front of me?")
-        print(f"result: {result}")
+        # print(f"result: {result}")
 
         # Generate speech from the result text
         tts = TTS(model_name=TTS_MODEL_NAME, progress_bar=True, gpu=True)
-        tts.tts_to_file(text="A bottle on a table", speaker=tts.speakers[0], language=tts.languages[0], file_path="output.wav")
+        tts.tts_to_file(text=result, speaker=tts.speakers[0], language=tts.languages[0], file_path="output.wav")
 
         return FileResponse("output.wav", media_type="audio/wav")
 
