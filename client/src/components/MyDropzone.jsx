@@ -1,74 +1,48 @@
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { API } from '../constants';
+import styled from 'styled-components';
+import AudioLogo from "../image/audio.svg";
 
-function MyDropzone() {
-  const [result, setResult] = useState('');
-  const [preview, setPreview] = useState('');
-  const [audio, setAudio] = useState(null);
+const Container = styled.div`
+  width: 100%;
+  border: 2px dashed grey;
+  border-radius: 30px;
+`
+const Wrapper = styled.div`
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 10px;
+  align-items: center;
+`
+
+function MyDropzone({ file, setFile }) {
+  const [fileName, setFileName] = useState(''); // Added this line to hold filename
 
   const onDrop = useCallback((acceptedFiles) => {
-    // Only do something if a single file was dropped
-    if (acceptedFiles.length === 1) {
-        const image = acceptedFiles[0];
-
-        // Set image preview
-        setPreview(URL.createObjectURL(image));
-
-        // Prepare form data
-        const formData = new FormData();
-        formData.append('file', image);
-
-        // Remove old audio file
-        setAudio(null);
-        setResult('');
-
-        // Post to the API
-        fetch(API + '/predict', {
-            headers: {
-                "ngrok-skip-browser-warning": true
-            },
-            method: 'POST',
-            body: formData,
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            setResult(data.result);
-
-            // Fetch audio file from separate endpoint
-            fetch(API + data.audioFile)
-            .then((response) => response.blob())
-            .then((blob) => {
-                const audioUrl = URL.createObjectURL(blob);
-                setAudio(audioUrl);
-            });
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    }
-    }, []);
-
+      if (acceptedFiles.length === 1) {
+          const audio = acceptedFiles[0];
+          setFileName(audio.name);  // Set the filename
+          setFile(audio);  // Store the file in the parent component
+      }
+  }, [setFile]);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: 'image/*', // Accept only image files
-    maxFiles: 1, // Allow only one file
+    accept: 'audio/*',
+    maxFiles: 1,
   });
 
   return (
-    <div>
-      <div {...getRootProps()}>
+    <Container>
+      <Wrapper {...getRootProps()}>
+        <img style={{height: '200px', width: '200px'}} src={AudioLogo} alt="audio" />
         <input {...getInputProps()} />
-        {preview ? (
-          <img src={preview} alt="Preview" style={{ width: '50%', height: 'auto' }} />
-        ) : (
-          <p>Drag 'n' drop an image here, or click to select one</p>
-        )}
-      </div>
-      {result && <div>Result: {result}</div>}
-      {audio && <audio controls src={audio}></audio>}
-    </div>
+        <div style={{fontSize: '1.5em', textAlign: 'center'}}>
+          {fileName || "Drag and drop an audio file here, or click to select one"}
+        </div>
+      </Wrapper>
+    </Container>
   );
 }
 
